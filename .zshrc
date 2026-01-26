@@ -76,6 +76,7 @@ autoload -U compinit && compinit
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+source /etc/profile.d/ona-secrets.sh
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
