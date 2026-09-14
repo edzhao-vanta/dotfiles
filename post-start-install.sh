@@ -6,10 +6,30 @@ set -x
 
 # All of these segments will be symlinked from the home directory to your EFS drive.
 for segment in .claude .claude.json .codex .oh-my-zsh .zshenv .zprofile .zsh_history .zshrc; do
-  # If you don't want to delete what's currently in the home directory, remove this.
-  if [ -e "$HOME/$segment" ]; then
-    rm -rf "$HOME/$segment"
+  efs_path="$EFS_MOUNT_POINT/$segment"
+  home_path="$HOME/$segment"
+
+  if [ -e "$efs_path" ]; then
+    # EFS already has this segment — normal case: relink local to point at it.
+    if [ -e "$home_path" ] || [ -L "$home_path" ]; then
+      rm -rf "$home_path"
+    fi
+    ln -s "$efs_path" "$home_path" || true
+
+  elif [ -e "$home_path" ] && [ ! -L "$home_path" ]; then
+    # EFS is missing it, but we have a real local copy — seed EFS from it.
+    echo "NOTICE: $efs_path missing, restoring from local copy at $home_path"
+    if cp -a "$home_path" "$efs_path"; then
+      rm -rf "$home_path"
+      ln -s "$efs_path" "$home_path" || true
+    else
+      echo "ERROR: failed to copy $home_path to $efs_path — leaving local copy untouched, not linking"
+    fi
+
+  else
+    # EFS is missing it, and there's no usable local copy to restore from
+    # (either nothing exists locally, or it's just a dangling symlink).
+    echo "WARNING: $efs_path missing and no local copy to restore from at $home_path — skipping"
   fi
-                                                                                                                        # Don't fail if the symlink already exists.
-  ln -s "$EFS_MOUNT_POINT/$segment" "$HOME" || true
 done
+
