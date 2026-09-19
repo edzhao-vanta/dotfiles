@@ -5,7 +5,7 @@ set -x
 : "${EFS_MOUNT_POINT:?EFS_MOUNT_POINT must be set}"
 
 # All of these segments will be symlinked from the home directory to your EFS drive.
-for segment in .claude .claude.json .codex .oh-my-zsh .zsh_history; do
+for segment in .claude .claude.json .codex .zsh_history; do
   efs_path="$EFS_MOUNT_POINT/$segment"
   home_path="$HOME/$segment"
 
