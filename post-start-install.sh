@@ -33,3 +33,10 @@ for segment in .claude .claude.json .codex .zsh_history; do
   fi
 done
 
+
+# Clone the SCOSEG knowledge base next to obsidian. This runs on every start, so skip it if the clone already exists.
+kb_dir=/workspaces/sco-seg-knowledge-base
+if [ ! -d "$kb_dir/.git" ]; then
+  git clone https://github.com/VantaInc/sco-seg-knowledge-base.git "$kb_dir" \
+    || echo "WARNING: failed to clone sco-seg-knowledge-base"
+fi
