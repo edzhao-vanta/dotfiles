@@ -7,8 +7,8 @@ sudo chsh "$(id -un)" --shell "/usr/bin/zsh"
 
 create_symlinks() {
     # Get a list of all files and directories in this directory that start
-    # with a dot (excluding "." and "..").
-    files=$(find "$script_dir" -maxdepth 1 -name ".*" ! -name "." ! -name "..")
+    # with a dot (excluding ".", "..", and ".git").
+    files=$(find "$script_dir" -maxdepth 1 -name ".*" ! -name "." ! -name ".." ! -name ".git")
 
     # Create a symbolic link to each file/directory in the home directory.
     for file in $files; do
@@ -19,23 +19,7 @@ create_symlinks() {
     done
 }
 
-link_claude_skills() {
-    src="$script_dir/claude/skills"
-    dest="$HOME/.claude/skills"
-
-    [ -d "$src" ] || return 0
-    mkdir -p "$dest"
-
-    for skill in "$src"/*/; do
-        name=$(basename "$skill")
-        echo "Linking Claude skill: $name"
-        rm -rf "${dest:?}/$name"
-        ln -s "${skill%/}" "$dest/$name"
-    done
-}
-
 create_symlinks
-link_claude_skills
 
 git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
 git clone https://github.com/zsh-users/zsh-completions.git "${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/plugins/zsh-completions"
