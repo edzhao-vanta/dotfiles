@@ -5,9 +5,11 @@ set -x
 : "${EFS_MOUNT_POINT:?EFS_MOUNT_POINT must be set}"
 
 # All of these segments will be symlinked from the home directory to your EFS drive.
-for segment in .claude .claude.json .codex .zsh_history; do
+# Herdr only links config.toml because its directory also holds sockets and logs.
+for segment in .claude .claude.json .codex .zsh_history .config/herdr/config.toml; do
   efs_path="$EFS_MOUNT_POINT/$segment"
   home_path="$HOME/$segment"
+  mkdir -p "$(dirname "$efs_path")" "$(dirname "$home_path")"
 
   if [ -e "$efs_path" ]; then
     # EFS already has this segment — normal case: relink local to point at it.
