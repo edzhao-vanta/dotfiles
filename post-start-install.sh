@@ -42,3 +42,11 @@ if [ ! -d "$kb_dir/.git" ]; then
   git clone https://github.com/VantaInc/sco-seg-knowledge-base.git "$kb_dir" \
     || echo "WARNING: failed to clone sco-seg-knowledge-base"
 fi
+
+# Install the SCOSEG skills from Obsidian's skills registry. Global installs land on EFS,
+# so re-running on each start refreshes them with whatever the checkout currently has.
+obsidian_dir=/workspaces/obsidian
+for skill in scoseg-kb scoseg-local-env; do
+  (cd "$obsidian_dir" && just marketplace skills add ./skills --skill "$skill" --agent claude-code --global --copy --yes) \
+    || echo "WARNING: failed to install skill $skill"
+done
