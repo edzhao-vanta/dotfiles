@@ -47,6 +47,6 @@ fi
 # so re-running on each start refreshes them with whatever the checkout currently has.
 obsidian_dir=/workspaces/obsidian
 for skill in scoseg-kb scoseg-local-env; do
-  (cd "$obsidian_dir" && just marketplace skills add ./skills --skill "$skill" --agent claude-code --global --copy --yes) \
+  (cd "$obsidian_dir" && just marketplace skills add ./skills --skill "$skill" --agent claude-code codex --global --copy --yes) \
     || echo "WARNING: failed to install skill $skill"
 done
