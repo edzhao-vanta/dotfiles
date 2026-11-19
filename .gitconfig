@@ -2,4 +2,7 @@
     branch = false
 [pull]
     ff = only
+[fetch]
+    prune = true
+    pruneTags = true
 
