@@ -4,5 +4,5 @@
     ff = only
 [fetch]
     prune = true
-    pruneTags = true
-
+[remote "origin"]
+    tagOpt = --no-tags
