@@ -29,3 +29,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM
 if ! command -v herdr >/dev/null 2>&1; then
     curl -fsSL https://herdr.dev/install.sh | sh
 fi
+
+if ! command -v rex >/dev/null 2>&1; then
+    curl -fsSL https://pkgs.superlogical.com/rex/install.sh | sh
+fi
