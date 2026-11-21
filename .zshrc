@@ -106,3 +106,8 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 DISABLE_AUTO_UPDATE=true
 DISABLE_UPDATE_PROMPT=true
+
+# Rex terminals start in $HOME, unlike Ona's SSH sessions, which start in the repo.
+if [[ -n $REX_SESSION && $PWD == $HOME ]]; then
+  cd /workspaces/obsidian
+fi
