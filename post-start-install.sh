@@ -50,3 +50,9 @@ for skill in scoseg-kb scoseg-local-env; do
   (cd "$obsidian_dir" && just marketplace skills add ./skills --skill "$skill" --agent claude-code codex --global --copy --yes) \
     || echo "WARNING: failed to install skill $skill"
 done
+
+# Install Rex's skill and agent hooks. This runs after the EFS links above so the Claude and Codex
+# pieces land on EFS; the shared ~/.agents/skills copy (Codex, Pi) is local and needs this on every new box.
+if command -v rex >/dev/null 2>&1; then
+  rex skill setup || echo "WARNING: failed to set up Rex skill"
+fi
