@@ -46,6 +46,15 @@ fi
 # Install the SCOSEG skills from Obsidian's skills registry. Global installs land on EFS,
 # so re-running on each start refreshes them with whatever the checkout currently has.
 obsidian_dir=/workspaces/obsidian
+
+# Let fetch overwrite tags that CI moves so pulls never fail with "would clobber existing tag".
+# This can't live in .gitconfig: a global tag refspec collides with clone's own and makes `git clone` fail.
+tag_refspec='+refs/tags/*:refs/tags/*'
+if ! git -C "$obsidian_dir" config --get-all remote.origin.fetch | grep -qxF "$tag_refspec"; then
+  git -C "$obsidian_dir" config --add remote.origin.fetch "$tag_refspec" \
+    || echo "WARNING: failed to add tag refspec to $obsidian_dir"
+fi
+
 for skill in scoseg-kb scoseg-local-env; do
   (cd "$obsidian_dir" && just marketplace skills add ./skills --skill "$skill" --agent claude-code codex --global --copy --yes) \
     || echo "WARNING: failed to install skill $skill"
