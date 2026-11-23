@@ -43,8 +43,6 @@ if [ ! -d "$kb_dir/.git" ]; then
     || echo "WARNING: failed to clone sco-seg-knowledge-base"
 fi
 
-# Install the SCOSEG skills from Obsidian's skills registry. Global installs land on EFS,
-# so re-running on each start refreshes them with whatever the checkout currently has.
 obsidian_dir=/workspaces/obsidian
 
 # Let fetch overwrite tags that CI moves so pulls never fail with "would clobber existing tag".
@@ -55,6 +53,8 @@ if ! git -C "$obsidian_dir" config --get-all remote.origin.fetch | grep -qxF "$t
     || echo "WARNING: failed to add tag refspec to $obsidian_dir"
 fi
 
+# Install the SCOSEG skills from Obsidian's skills registry. Global installs land on EFS,
+# so re-running on each start refreshes them with whatever the checkout currently has.
 for skill in scoseg-kb scoseg-local-env; do
   (cd "$obsidian_dir" && just marketplace skills add ./skills --skill "$skill" --agent claude-code codex --global --copy --yes) \
     || echo "WARNING: failed to install skill $skill"
