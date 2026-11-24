@@ -73,3 +73,5 @@ clean-worktrees() {
 
   git worktree list
 }
+
+alias codex='codex --approve-for-me'
