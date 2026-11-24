@@ -1,9 +1,17 @@
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="devcontainers"
-plugins=(git zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
+
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-history-substring-search
+  zsh-syntax-highlighting
+)
+
 # zsh-completions isn't an oh-my-zsh plugin; it only needs to be on fpath before oh-my-zsh runs compinit.
 fpath+=$ZSH/custom/plugins/zsh-completions/src
 zstyle ':omz:update' mode disabled
+
 source $ZSH/oh-my-zsh.sh
 
 [ -f /etc/profile.d/ona-secrets.sh ] && . /etc/profile.d/ona-secrets.sh
@@ -12,6 +20,8 @@ source $ZSH/oh-my-zsh.sh
 if [[ -n $REX_SESSION && $PWD == $HOME ]]; then
   cd /workspaces/obsidian
 fi
+
+alias codex='codex --approve-for-me'
 
 # Remove every linked worktree and every local branch except main, after one confirmation.
 clean-worktrees() {
@@ -22,8 +32,15 @@ clean-worktrees() {
   fi
 
   local -a worktrees branches
-  worktrees=(${(f)"$(git worktree list --porcelain | awk '/^worktree / {print substr($0, 10)}' | tail -n +2)"})
-  branches=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads | grep -vx main)"})
+  worktrees=(${(f)"$(
+    git worktree list --porcelain |
+      awk '/^worktree / {print substr($0, 10)}' |
+      tail -n +2
+  )"})
+  branches=(${(f)"$(
+    git for-each-ref --format='%(refname:short)' refs/heads |
+      grep -vx main
+  )"})
 
   if (( ${#worktrees} == 0 && ${#branches} == 0 )); then
     echo "Already clean: no linked worktrees and no branches besides main."
@@ -73,5 +90,3 @@ clean-worktrees() {
 
   git worktree list
 }
-
-alias codex='codex --approve-for-me'
