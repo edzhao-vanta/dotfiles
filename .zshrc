@@ -17,7 +17,7 @@ source $ZSH/oh-my-zsh.sh
 [ -f /etc/profile.d/ona-secrets.sh ] && . /etc/profile.d/ona-secrets.sh
 
 # Rex terminals start in $HOME, unlike Ona's SSH sessions, which start in the repo.
-if [[ -n $REX_SESSION && $PWD == $HOME ]]; then
+if [[ -n $REX_BLOCK && $PWD == $HOME ]]; then
   cd /workspaces/obsidian
 fi
 
